@@ -1,0 +1,285 @@
+/* ==============================
+   AI 同声传译助手 - 全局样式
+   ============================== */
+
+:root {
+    --primary: #1a7f37;
+    --primary-light: #dafbe1;
+    --danger: #cf222e;
+    --bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text: #1f2328;
+    --text-secondary: #656d76;
+    --border: #d0d7de;
+    --radius: 8px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+.app {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---- Header ---- */
+.header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+.header h1 {
+    font-size: 24px;
+    font-weight: 600;
+}
+.header .subtitle {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* ---- 控制面板 ---- */
+.control-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.control-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.control-row label {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+.select-lang {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
+}
+.arrow {
+    color: var(--text-secondary);
+    font-size: 18px;
+}
+.target-lang {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* ---- 按钮 ---- */
+.btn {
+    padding: 8px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.btn-start {
+    background: var(--primary);
+    color: white;
+}
+.btn-start:hover:not(:disabled) {
+    opacity: 0.9;
+}
+.btn-stop {
+    background: var(--danger);
+    color: white;
+}
+
+/* ---- 状态栏 ---- */
+.status-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+    font-size: 13px;
+}
+.volume-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.volume-label {
+    color: var(--text-secondary);
+}
+.volume-track {
+    width: 80px;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+.volume-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.1s, background-color 0.2s;
+}
+.volume-fill.high {
+    background: var(--danger);
+}
+.status-text {
+    color: var(--text-secondary);
+}
+.error-text {
+    color: var(--danger);
+}
+
+/* ---- 字幕区域 ---- */
+.subtitle-area {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    min-height: 350px;
+    max-height: 550px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+.empty-hint {
+    color: #bbb;
+    text-align: center;
+    padding-top: 120px;
+    font-size: 15px;
+}
+
+/* 字幕条目 */
+.subtitle-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.subtitle-item:last-child {
+    border-bottom: none;
+}
+.subtitle-time {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+}
+.subtitle-original {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+.subtitle-translation {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+/* 已修正状态 */
+.subtitle-item.corrected {
+    background: var(--primary-light);
+    border-radius: 4px;
+    padding: 10px 8px;
+    margin: 2px -8px;
+}
+.correction-badge {
+    color: var(--primary);
+    font-size: 12px;
+    margin-left: 8px;
+}
+.correction-old {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+    margin-left: 4px;
+    font-size: 12px;
+}
+
+/* interim 预览 */
+.interim-text {
+    padding: 10px 0;
+    border-bottom: 1px dashed #e0e0e0;
+}
+.interim-original {
+    color: #999;
+    font-style: italic;
+    font-size: 13px;
+}
+.interim-preview {
+    color: #666;
+    font-size: 15px;
+    margin-top: 2px;
+    font-weight: 400;
+    /* 预翻译出现时有淡入效果 */
+    animation: fadeInPreview 0.3s ease;
+}
+@keyframes fadeInPreview {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ---- 流式字幕状态 ---- */
+
+/* streaming: 正在逐字输出中 */
+.subtitle-item.streaming .subtitle-translation {
+    color: #555;
+    border-left: 3px solid #0969da;
+    padding-left: 8px;
+}
+/* streaming 光标效果 */
+.subtitle-item.streaming .streaming-text::after {
+    content: '▌';
+    color: #0969da;
+    animation: blink 0.8s infinite;
+}
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* confirmed: 已确认完成 */
+.subtitle-item.confirmed .subtitle-translation {
+    color: var(--text);
+    border-left: 3px solid var(--primary);
+    padding-left: 8px;
+}
+
+/* ---- 回到最新按钮 ---- */
+.btn-scroll-bottom {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 20px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: white;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+.btn-scroll-bottom:hover {
+    background: #f0f0f0;
+}

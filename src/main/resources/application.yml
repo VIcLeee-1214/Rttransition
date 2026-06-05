@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: rt-translation
+  # Redis 配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# ====== 自定义业务配置 ======
+
+# Deepgram ASR
+deepgram:
+  api-key: ${DEEPGRAM_API_KEY:}
+  model: nova-3
+  # 静音多少毫秒后判定一句话说完（100ms = 更灵敏，减少等待感）
+  endpointing-ms: 100
+
+# OpenAI 翻译
+openai:
+  api-key: ${OPENAI_API_KEY:}
+  base-url: https://api.openai.com/v1
+  model: gpt-4.1
+  temperature: 0.3
+
+# 认证（配置后启用，留空则不启用）
+app:
+  auth:
+    token: ${APP_AUTH_TOKEN:}
+
+# 翻译参数
+translation:
+  # prompt 中保留的最大历史轮数
+  max-context-turns: 20
+  # 每 N 句触发一次回顾纠错
+  review-interval: 20
+  # 句子缓冲区超时（秒）
+  sentence-buffer-timeout: 5.0
