@@ -17,18 +17,19 @@ logging:
 
 # ====== 自定义业务配置 ======
 
-# Deepgram ASR
-deepgram:
-  api-key: ${DEEPGRAM_API_KEY:}
-  model: nova-3
-  # 静音多少毫秒后判定一句话说完（100ms = 更灵敏，减少等待感）
-  endpointing-ms: 100
+# 讯飞实时语音识别
+iflytek:
+  app-id: ${IFLYTEK_APP_ID:}
+  api-key: ${IFLYTEK_API_KEY:}
+  api-secret: ${IFLYTEK_API_SECRET:}
+  # en_us = 英文识别, mandarin = 中文, mand_en_a = 中英混合
+  accent: en_us
 
-# OpenAI 翻译
+# DeepSeek 翻译（兼容 OpenAI 接口）
 openai:
-  api-key: ${OPENAI_API_KEY:}
-  base-url: https://api.openai.com/v1
-  model: gpt-4.1
+  api-key: ${DEEPSEEK_API_KEY:}
+  base-url: https://api.deepseek.com/v1
+  model: deepseek-chat
   temperature: 0.3
 
 # 认证（配置后启用，留空则不启用）

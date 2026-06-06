@@ -20,7 +20,7 @@ import java.util.function.Consumer;
  * <p>四种能力：
  * <ul>
  *   <li>{@link #streamTranslate} - 流式翻译（含 token 推送），翻译完成后自动触发纠错</li>
- *   <li>{@link #previewTranslate} - 快速预翻译（gpt-4o-mini），用于 interim</li>
+ *   <li>{@link #previewTranslate} - 快速预翻译（deepseek-chat），用于 interim</li>
  *   <li>{@link #reviewAndCorrect} - 周期性回顾纠错（每 N 句触发）</li>
  *   <li>{@link #generateSentenceId} - 统一的 sentenceId 生成</li>
  * </ul>
@@ -41,7 +41,7 @@ public class TranslationService {
     /** 每个会话的回顾计数器 */
     private final Map<String, Integer> reviewCounters = new HashMap<>();
 
-    private static final String PREVIEW_MODEL = "gpt-4o-mini";
+    private static final String PREVIEW_MODEL = "deepseek-chat";
 
     private static final Map<String, String> LANG_NAMES = Map.of(
             "en", "英语", "ja", "日语", "ko", "韩语",
@@ -248,7 +248,7 @@ public class TranslationService {
     // ==================== 快速预翻译（用于 interim result） ====================
 
     /**
-     * 快速预翻译 - 用 gpt-4o-mini 做轻量翻译，只返回纯译文文本。
+     * 快速预翻译 - 用 deepseek-chat 做轻量翻译，只返回纯译文文本。
      */
     public String previewTranslate(String sessionId, String sourceLang, String text) throws IOException {
         String langName = LANG_NAMES.getOrDefault(sourceLang, "英语");

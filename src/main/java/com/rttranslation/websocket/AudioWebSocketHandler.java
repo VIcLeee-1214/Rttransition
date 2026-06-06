@@ -42,7 +42,7 @@ public class AudioWebSocketHandler extends BinaryWebSocketHandler {
     private final SessionService sessionService;
     private final SseService sseService;
 
-    private final Map<String, AsrService.DeepgramConnection> connections = new ConcurrentHashMap<>();
+    private final Map<String, AsrService.IflytekConnection> connections = new ConcurrentHashMap<>();
     private final Map<String, Future<?>> previewFutures = new ConcurrentHashMap<>();
     private final Map<String, String> lastPreviewText = new ConcurrentHashMap<>();
 
@@ -86,7 +86,7 @@ public class AudioWebSocketHandler extends BinaryWebSocketHandler {
 
         String sourceLang = sessionMeta.get().getOrDefault("sourceLang", "en");
 
-        AsrService.DeepgramConnection dgConn = asrService.start(sessionId, sourceLang,
+        AsrService.IflytekConnection ifConn = asrService.start(sessionId, sourceLang,
                 (type, text) -> {
                     try {
                         handleAsrResult(sessionId, sourceLang, type, text);
@@ -95,8 +95,8 @@ public class AudioWebSocketHandler extends BinaryWebSocketHandler {
                     }
                 });
 
-        connections.put(sessionId, dgConn);
-        log.info("[{}] WebSocket 已连接，ASR 引擎已启动", sessionId);
+        connections.put(sessionId, ifConn);
+        log.info("[{}] WebSocket 已连接，讯飞 ASR 引擎已启动", sessionId);
     }
 
     @Override
@@ -104,9 +104,9 @@ public class AudioWebSocketHandler extends BinaryWebSocketHandler {
         String sessionId = extractSessionId(session);
         if (sessionId == null) return;
 
-        AsrService.DeepgramConnection dgConn = connections.get(sessionId);
-        if (dgConn != null) {
-            dgConn.sendAudio(message.getPayload().array());
+        AsrService.IflytekConnection ifConn = connections.get(sessionId);
+        if (ifConn != null) {
+            ifConn.sendAudio(message.getPayload().array());
         }
     }
 
@@ -115,8 +115,8 @@ public class AudioWebSocketHandler extends BinaryWebSocketHandler {
         String sessionId = extractSessionId(session);
         if (sessionId == null) return;
 
-        AsrService.DeepgramConnection dgConn = connections.remove(sessionId);
-        if (dgConn != null) dgConn.close();
+        AsrService.IflytekConnection ifConn = connections.remove(sessionId);
+        if (ifConn != null) ifConn.close();
 
         Future<?> previewFuture = previewFutures.remove(sessionId);
         if (previewFuture != null) previewFuture.cancel(true);

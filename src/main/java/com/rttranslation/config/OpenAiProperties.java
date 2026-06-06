@@ -12,7 +12,7 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "openai")
 public class OpenAiProperties {
     private String apiKey;
-    private String baseUrl = "https://api.openai.com/v1";
-    private String model = "gpt-4.1";
+    private String baseUrl = "https://api.deepseek.com/v1";
+    private String model = "deepseek-chat";
     private double temperature = 0.3;
 }
