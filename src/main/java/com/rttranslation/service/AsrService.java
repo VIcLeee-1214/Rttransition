@@ -45,6 +45,10 @@ public class AsrService {
      */
     public DeepgramConnection start(String sessionId, String sourceLang,
                                      BiConsumer<String, String> onResult) {
+        if (config.getApiKey() == null || config.getApiKey().isBlank()) {
+            log.error("[{}] DEEPGRAM_API_KEY 未配置！请在环境变量或 application.yml 中设置", sessionId);
+        }
+
         // Deepgram WebSocket URL
         String url = String.format(
                 "wss://api.deepgram.com/v1/listen?model=%s&language=%s" +
@@ -77,6 +81,8 @@ public class AsrService {
         private final BiConsumer<String, String> onResult;
         private final LinkedBlockingDeque<byte[]> audioBuffer = new LinkedBlockingDeque<>(500);
         private final WebSocketListener listener;
+        private volatile long lastBufferWarnTime = 0;
+        private volatile int droppedFrames = 0;
 
         DeepgramConnection(OkHttpClient httpClient, Request request, String sessionId,
                            BiConsumer<String, String> onResult) {
@@ -172,7 +178,14 @@ public class AsrService {
                 currentWs.send(ByteString.of(data));
             } else {
                 if (!audioBuffer.offerLast(data)) {
-                    log.warn("[{}] 音频缓冲区已满，丢弃帧", sessionId);
+                    droppedFrames++;
+                    long now = System.currentTimeMillis();
+                    if (now - lastBufferWarnTime > 2000) {
+                        log.warn("[{}] 音频缓冲区已满，已丢弃 {} 帧（Deepgram 可能未连接，请检查 API Key）",
+                                sessionId, droppedFrames);
+                        lastBufferWarnTime = now;
+                        droppedFrames = 0;
+                    }
                 }
             }
         }

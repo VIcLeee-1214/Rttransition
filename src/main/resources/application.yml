@@ -10,6 +10,11 @@ spring:
       host: localhost
       port: 6379
 
+# 强制控制台 UTF-8 编码（解决 Windows 中文乱码）
+logging:
+  charset:
+    console: UTF-8
+
 # ====== 自定义业务配置 ======
 
 # Deepgram ASR
